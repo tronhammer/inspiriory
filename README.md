@@ -1,0 +1,4 @@
+inspiriory
+==========
+
+Inspirational Diary
