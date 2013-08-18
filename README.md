@@ -1,4 +1,5 @@
-inspiriory
-==========
+### Names
 
-Inspirational Diary
+inspiriory
+inspiary
+inspirory
