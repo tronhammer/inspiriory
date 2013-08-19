@@ -47,7 +47,7 @@
 				
 				$("#ask-question").bind("click", function(e){
 					$.ajax({
-						url: "http://inspiriory.com/api/",
+						url: "http://inspiriory.com/api/index.php",
 						method: "POST",
 						dataType: "json",
 						data: {

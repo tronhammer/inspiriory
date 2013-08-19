@@ -75,10 +75,12 @@
 			
 				$sth->execute( $with );
 				
+				$id = $this->connection->lastInsertId();
+				
 				if ($sth->errorCode() == 0){
 					if ($this->connection->commit()){
 						return array(
-							"id" => $sth->lastInsertId()
+							"id" => $id
 						);
 					}
 				} else {
@@ -103,7 +105,9 @@
 			$with = array('remove' => array());
 			
 			foreach ($table['fields'] as $name=>$info){
+				error_log("I want ".$name);
 				if (isset($fields[ $name ])){
+					error_log("is in fields");
 					$field = $fields[ $name ];
 					$validate_fn = array($table['name'], $info['validate']);
 					if (method_exists($table['name'], $info['validate']) 
@@ -116,11 +120,14 @@
 						exit(1);
 					}
 				} else if (isset($info['required']) && $info['required'] === 1){
+					error_log("is required");
 					echo $this->lib['wrap']( array(), 1, '"'.$name.'" is a required field!' );
 					exit(1);
-				} else if (isset($info['default'])){
+				} else if (array_key_exists('default', $info)){
+					error_log("adding this guy ".$info['name']);
 					$with[':' . $name] = $info['default'];
 				} else {
+					error_log("removing this...");
 					$with['remove'][] = $name;
 				}
 			}

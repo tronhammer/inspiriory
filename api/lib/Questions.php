@@ -31,6 +31,10 @@
 			)
 		);
 		
+		static public function validate_id($val){
+			return true;
+		}
+		
 		static public function validate_name($val){
 			return true;
 		}
