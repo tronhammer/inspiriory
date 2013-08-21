@@ -8,9 +8,8 @@
 	);
 	
 	function list_questions($args, $vars, $lib){
-		$db = new DBHandler();
-		$db->setTable('questions');
-		$rows = $db->get('name,body,created');
+		$db = new DBHandler($lib);
+		$rows = $db->get('questions', 'id,name,body,created');
 		if (count($rows)){
 			return $lib['wrap']( $rows );
 		} else {

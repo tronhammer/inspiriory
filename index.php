@@ -28,21 +28,33 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			$(function ()
-			{
-				$.ajax({
-					url: "http://inspiriory.com/api/",
-					dataType: "json",
-					data: {
-						action: "questions"
-					}
-				}).done(function(data){
+			window.inspiriory = {
+				heartbeat: function(){
+					$.ajax({
+						url: "http://inspiriory.com/api/index.php",
+						dataType: "json",
+						data: {
+							action: "questions"
+						}
+					}).done(window.inspiriory.updates);
+				},
+				updates: function(data){
 					var questions = data.data;
 					var $container = $("#questions");
 					for(var i=0;i<data.data.length;i++){
-						$container.append( $("<div/>").text( questions[i].name ) );
+						var id = "q-"+questions[i].id;
+						if (!$("#"+id).length){
+							$container.append( $("<div/>").addClass("question-container").attr("id", id).data("id", questions[i].id).text( questions[i].name ) );
+						}
 					}
-				});
+				}
+			};
+			
+			$(function ()
+			{
+				window.inspiriory.heartbeat();
+				setInterval(window.inspiriory.heartbeat, 5000);
+
 				
 				
 				$("#ask-question").bind("click", function(e){
@@ -63,6 +75,27 @@
 						console.log(resp);
 					});
 				});
+				
+				$("#questions").delegate(".question-container", "click", function(e){
+					var _this = $(this);
+					$.ajax({
+						url: "http://inspiriory.com/api/index.php",
+						method: "POST",
+						dataType: "json",
+						data: {
+							"action": "delete_question",
+							"id": $(this).data("id"),
+						}
+					}).done(function(resp){
+						console.log("SUCCESS!");
+						_this.remove();
+						
+					}).fail(function(resp){
+						console.log("FAIL!");
+					}).always(function(resp){
+						console.log(resp);
+					});
+				})
 			})
 		</script>
 	</body>

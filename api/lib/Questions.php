@@ -5,12 +5,22 @@
 			'id' => 'questions',
 			'name' => 'Questions',
 			'fields' => array(
+				'id'=>array(
+					'id'=>'id',
+					'name'=>'Question ID',
+					'type'=>'int',
+					'length'=>2,
+					'required_to'=>array(DBHandler::DELETE),
+					'hidden_to'=>array(DBHandler::CREATE),
+					'validate'=>'validate_id'
+				),
 				'name'=>array(
 					'id'=>'name',
 					'name'=>'Question Name',
 					'type'=>'string',
 					'length'=>80,
-					'required'=>1,
+					'required_to'=>array(DBHandler::CREATE),
+					'hidden_to'=>array(DBHandler::DELETE),
 					'validate'=>'validate_name'
 				),
 				'body'=>array(
@@ -18,14 +28,15 @@
 					'name'=>'Question Body Content',
 					'type'=>'string',
 					'length'=>255,
-					'required'=>1,
+					'required_to'=>array(DBHandler::CREATE),
+					'hidden_to'=>array(DBHandler::DELETE),
 					'validate'=>'validate_body'
 				),
 				'type'=>array(
 					'id'=>'type',
 					'name'=>'Question Type',
 					'type'=>'int',
-					'default'=>1,
+					'hidden_to'=>array(DBHandler::DELETE),
 					'validate'=>'validate_type'
 				)
 			)

@@ -38,17 +38,22 @@
 	require_once('get/get.php');
 	require_once('post/post.php');
 	
-	if (isset($_GET['action'])){
-		if (isset($gfunc[ $_GET['action'] ]) && function_exists($gfunc[ $_GET['action'] ]) && is_callable($gfunc[ $_GET['action'] ])){
-			echo $gfunc[ $_GET['action'] ]($_GET, $gvars, $func);
-			exit(0);
-		} else {
-			echo $func['wrap']( null, 1, 'That action is not available!');
-			exit(1);
-		}
-	} else if (isset($_POST['action'])){
-		if (isset($pfunc[ $_POST['action'] ]) && function_exists($pfunc[ $_POST['action'] ]) && is_callable($pfunc[ $_POST['action'] ])){
-			echo $pfunc[ $_POST['action'] ]($_POST, $pvars, $func);
+	switch(true){
+		case isset($_GET['action']):
+			$args = $_GET;
+			$funcs = $gfunc;
+			$vars = $gvars;
+			break;
+		case isset($_POST['action']):
+			$args = $_POST;
+			$funcs = $pfunc;
+			$vars = $pvars;
+			break;
+	}
+	
+	if (isset($args) && isset($funcs)){
+		if (isset($funcs[ $args['action'] ]) && function_exists($funcs[ $args['action'] ]) && is_callable($funcs[ $args['action'] ])){
+			echo $funcs[ $args['action'] ]($args, $vars, $func);
 			exit(0);
 		} else {
 			echo $func['wrap']( null, 1, 'That action is not available!');
